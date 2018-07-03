@@ -54,7 +54,6 @@ export default class Scheduler extends Component {
         }
         this._createTaskAsync(message);
 
-
         this.setState({
             message: '',
         });
@@ -75,7 +74,6 @@ export default class Scheduler extends Component {
         try {
             this._setTasksFetcingState(true);
             const task = await api.fetchTask();
-            console.log(task);
             this.setState({
                 task,
             });
