@@ -26,7 +26,7 @@ export default class Scheduler extends Component {
 
     state = {
         checked: true,
-        comment: '',
+        message: '',
     }
     MockFunction = () => {
 
@@ -37,25 +37,30 @@ export default class Scheduler extends Component {
     };
 
     _updateComment = (e) => {
-        const { value: comment } = e.target;
-
-        this.setState({ comment });
+        const { value: message } = e.target;
+        this.setState({ message });
     }
 
     _heandleFormSubmit = (e) => {
         e.preventDefault();
+        const { message } = this.state;
         this._submitComment();
     }
 
     _submitComment = () => {
-        const { comment } = this.state;
-
-        if (!comment) {
+        const { message } = this.state;
+        if (!message) {
             return null;
         }
-        console.log(comment);
-    }
+        this._createTaskAsync(message);
 
+
+        this.setState({
+            message: '',
+        });
+
+        this._fetchTaskAsync();
+    }
     _submitCommentOnEnter (e) {
         console.log(this.state);
         const enterKey = e.key === 'Enter';
@@ -69,43 +74,40 @@ export default class Scheduler extends Component {
     _fetchTaskAsync = async () => {
         try {
             this._setTasksFetcingState(true);
-            const tasks = await api.fetchTask();
-
+            const task = await api.fetchTask();
+            console.log(task);
             this.setState({
-                tasks,
+                task,
             });
         } catch ({ message }) {
             console.error(message);
         } finally {
             this._setTasksFetcingState(false);
         }
-        console.log(tasks);
     }
-
 
     _createTaskAsync = async (message) => {
         try {
-            this._setTaskFetcingState(true);
+            this._setTasksFetcingState(true);
             const task = await api.createTask(message);
-
             // this.setState(({ posts }) => ({
             //     posts: [post, ...posts], //очень важно с ключами
             // }));
         } catch ({ message }) {
-            console.error(message);
+
         } finally {
-            this._setTaskFetcingState(false);
+            this._setTasksFetcingState(false);
         }
 
     }
 
 
     render () {
-        const { task: message } = this.state;
+        const { task: messages } = this.state;
 
-        const { comment, checked } = this.state;
-
+        const { message, checked } = this.state;
         return (
+
             <section className = { Styles.scheduler }>
                 <main>
                     <Spinner isSpinning = { this.isSpinning }>
@@ -125,7 +127,7 @@ export default class Scheduler extends Component {
                                 placeholder = 'Описание моей новой задачи'
                                 type = 'text'
                                 onChange = { this._updateComment }
-                                value = { comment }
+                                value = { message }
                             />
 
                             <button onClick = { this._heandleFormSubmit }> Добавить задачу</button>
