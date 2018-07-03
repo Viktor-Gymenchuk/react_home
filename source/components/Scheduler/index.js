@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 
 // Instruments
 import Styles from './styles.m.css';
-import Checkbox from '../../theme/assets/Checkbox';
-import Spinner from '../../components/Spinner';
-import Task from '../../components/Task';
+import Checkbox from 'theme/assets/Checkbox';
+import Spinner from 'components/Spinner';
+import Task from 'components/Task';
+import { api } from 'REST/api';
 
 export default class Scheduler extends Component {
     constructor () {
@@ -13,7 +14,11 @@ export default class Scheduler extends Component {
         this._createTaskAsync = this._createTaskAsync.bind(this);
     }
 
-    _setTaskFetcingState = (isSpinning) => {
+    componentDidMount () {
+        this._fetchTaskAsync();
+    }
+
+    _setTasksFetcingState = (isSpinning) => {
         this.setState({
             isSpinning,
         });
@@ -58,8 +63,23 @@ export default class Scheduler extends Component {
         if (enterKey) {
 
             e.preventDefault();
-            console.log(comment);
         }
+    }
+
+    _fetchTaskAsync = async () => {
+        try {
+            this._setTasksFetcingState(true);
+            const tasks = await api.fetchTask();
+
+            this.setState({
+                tasks,
+            });
+        } catch ({ message }) {
+            console.error(message);
+        } finally {
+            this._setTasksFetcingState(false);
+        }
+        console.log(tasks);
     }
 
 
@@ -76,7 +96,7 @@ export default class Scheduler extends Component {
         } finally {
             this._setTaskFetcingState(false);
         }
-        console.log(task);
+
     }
 
 
