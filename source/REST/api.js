@@ -19,7 +19,7 @@ export const api = {
 
         return posts;
     },
-    async createTask (comment) {
+    async createTask (message) {
         const response = await fetch(MAIN_URL, {
             method:  'POST',
             headers: {
@@ -27,16 +27,16 @@ export const api = {
                 Authorization:  TOKEN,
             },
             body: JSON.stringify({
-                comment,
+                message,
             }),
         });
 
         if (response.status !== 200) {
             throw new Error('Posts not create');
         }
-        const { data: post } = await response.json();
+        const { data: task } = await response.json();
 
-        return post;
+        return task;
     },
     async removeTask (id) {
         const response = await fetch(`${MAIN_URL}/${id}`, {

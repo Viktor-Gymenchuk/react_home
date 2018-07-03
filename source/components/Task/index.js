@@ -47,7 +47,7 @@ export default class Task extends PureComponent {
         id,
         completed,
         favorite,
-        message,
+        task,
     });
 
     _removePost = () => {

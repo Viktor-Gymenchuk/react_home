@@ -13,6 +13,12 @@ export default class Scheduler extends Component {
         this._createTaskAsync = this._createTaskAsync.bind(this);
     }
 
+    _setTaskFetcingState = (isSpinning) => {
+        this.setState({
+            isSpinning,
+        });
+    }
+
     state = {
         checked: true,
         comment: '',
@@ -38,6 +44,7 @@ export default class Scheduler extends Component {
 
     _submitComment = () => {
         const { comment } = this.state;
+
         if (!comment) {
             return null;
         }
@@ -48,7 +55,7 @@ export default class Scheduler extends Component {
         console.log(this.state);
         const enterKey = e.key === 'Enter';
 
-        if(enterKey){
+        if (enterKey) {
 
             e.preventDefault();
             console.log(comment);
@@ -59,7 +66,7 @@ export default class Scheduler extends Component {
     _createTaskAsync = async (message) => {
         try {
             this._setTaskFetcingState(true);
-            const tasc = await api.createTask(message);
+            const task = await api.createTask(message);
 
             // this.setState(({ posts }) => ({
             //     posts: [post, ...posts], //очень важно с ключами
@@ -67,18 +74,21 @@ export default class Scheduler extends Component {
         } catch ({ message }) {
             console.error(message);
         } finally {
-            this._setPostsFetcingState(false);
+            this._setTaskFetcingState(false);
         }
+        console.log(task);
     }
 
-    render () {
-        const { comment, checked } = this.state;
 
+    render () {
+        const { task: message } = this.state;
+
+        const { comment, checked } = this.state;
 
         return (
             <section className = { Styles.scheduler }>
                 <main>
-                    <Spinner isSpinning>
+                    <Spinner isSpinning = { this.isSpinning }>
                         <div
                             className = 'spinner'
                         />
