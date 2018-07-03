@@ -3,7 +3,7 @@ import { MAIN_URL, TOKEN } from './config';
 
 export const api = {
     async fetchTask () {
-        const response = await fetch(`${MAIN_URL}?size=2`, {
+        const response = await fetch(`${MAIN_URL}`, {
             Authorization: TOKEN,
             headers: {
                 'Content-Type': 'application/json',
@@ -15,9 +15,9 @@ export const api = {
         if (response.status !== 200) {
             throw new Error('Tasks were not loded');
         }
-        const { data: task } = await response.json();
+        const { data: tasks } = await response.json();
 
-        return task;
+        return tasks;
     },
 
     async createTask (message) {
