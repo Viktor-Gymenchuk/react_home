@@ -32,7 +32,6 @@ export default class Scheduler extends Component {
 
 
     MockFunction = () => {
-
         this.setState((prevState) => ({
             checked: !prevState.checked,
         }));
@@ -43,7 +42,6 @@ export default class Scheduler extends Component {
         const {value: message} = e.target;
         this.setState({message});
     }
-
     _heandleFormSubmit = (e) => {
         e.preventDefault();
         const {message} = this.state;
@@ -90,33 +88,28 @@ export default class Scheduler extends Component {
         try {
             this._setTasksFetcingState(true);
             const task = await api.createTask(message);
-            console.log('_createTaskAsync - semd');
-            // this.setState(({ posts }) => ({
-            //     posts: [post, ...posts], //очень важно с ключами
-            // }));
+            console.log(task);
         } catch ({message}) {
 
         } finally {
             this._setTasksFetcingState(false);
         }
+
     }
 
 
     render() {
         const {tasks: userTask, id, messages, checked, message} = this.state;
-
         const tasks = userTask.map((task) => (
-
-
             <Task
                 {...task}
                 _removeTaskAsync={ this._removeTaskAsync }
                 completed={ false }
                 favorite={ false }
-
                 key={task.id}
             />
         ));
+
 
         return (
 
@@ -148,7 +141,6 @@ export default class Scheduler extends Component {
                         <div className='overlay'>
                             <div>
                                 <ul>
-
                                     {tasks}
                                 </ul>
                             </div>
@@ -166,12 +158,11 @@ export default class Scheduler extends Component {
                         />
                         <span
                             className='completeAllTasks'>
-Все задачи выполнены
-</span>
+                        Все задачи выполнены
+                        </span>
                     </footer>
                 </main>
             </section>
-        )
-            ;
+        );
     }
 }
