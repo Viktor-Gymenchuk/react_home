@@ -74,6 +74,7 @@ export default class Scheduler extends Component {
         try {
             this._setTasksFetcingState(true);
             const task = await api.fetchTask();
+
             this.setState({
                 task,
             });
