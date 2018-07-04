@@ -52,14 +52,15 @@ export const api = {
         }
 
     },
-    async updateTask(tasks){
-        const response = await fetch(`${MAIN_URL}`, {
-            method:  'POST',
+    async updateTask(id, message){
+        const response = await fetch(`${MAIN_URL}/${id}`, {
+
+            method:  'PUT',
             headers: {
                 Authorization:  TOKEN,
             },
         });
-
+        console.log(message);
         if (response.status !== 204) {
             throw new Error('Posts were not update');
         }

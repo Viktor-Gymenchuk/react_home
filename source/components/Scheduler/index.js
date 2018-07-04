@@ -35,7 +35,6 @@ export default class Scheduler extends Component {
         this.setState((prevState) => ({
             checked: !prevState.checked,
         }));
-
     };
 
     _updateComment = (e) => {
@@ -88,13 +87,44 @@ export default class Scheduler extends Component {
         try {
             this._setTasksFetcingState(true);
             const task = await api.createTask(message);
-            console.log(task);
+            this.setState(({ tasks }) => ({
+                tasks: [task, ...tasks] //перерендерить tasks
+            }));
         } catch ({message}) {
 
         } finally {
             this._setTasksFetcingState(false);
         }
+    }
+    _removeTaskAsync = async (id) => {
+        try {
+            this._setTasksFetcingState(true);
+            await api.removeTask(id);
 
+            this.setState(({ tasks }) => ({
+                tasks: tasks.filter((task) => task.id !== id),
+            }));
+        } catch ({ message }) {
+            console.error(message);
+        } finally {
+            this._setTasksFetcingState(false);
+        }
+    }
+
+    _updateTaskAsync = async (id, message) => {
+        try {
+            this._setTasksFetcingState(true);
+            const updateTask = await api.updateTask(id, message);
+
+
+            this.setState(({ tasks }) => ({
+                tasks: tasks.map((task) => task.id === id ? updateTask : task), //очень важно с ключами
+            }));
+        } catch ({ message }) {
+            console.error(message);
+        } finally {
+            this._setTasksFetcingState(false);
+        }
     }
 
 
@@ -103,10 +133,11 @@ export default class Scheduler extends Component {
         const tasks = userTask.map((task) => (
             <Task
                 {...task}
-                _removeTaskAsync={ this._removeTaskAsync }
                 completed={ false }
                 favorite={ false }
                 key={task.id}
+                _removeTaskAsync = { this._removeTaskAsync }
+                _updateTaskAsync = { this._updateTaskAsync}
             />
         ));
 

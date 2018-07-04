@@ -10,20 +10,19 @@ import Remove from '../../theme/assets/Remove';
 
 export default class Task extends PureComponent {
     state = {
-        message: [],
-        checked: false,
+
+        completed: false,
         favorite:    false,
         edit:    false,
-
+        disable: true,
     }
 
-    Function = () => {
+    _toggleTaskCompleted = () => {
         this.setState((prevState) => ({
-            checked: !prevState.checked,
+            completed: !prevState.completed,
         }));
 
     };
-
 
     _removeTask = () => {
         const {
@@ -31,20 +30,19 @@ export default class Task extends PureComponent {
         } = this.props;
 
         _removeTaskAsync(id);
-    } //УДАЛИТЬ ПОСТЫ
+    }
 
     _toggleTaskFavoriteState = () => {
 
     }
 
     _updateTaskMessageOnClick = () => {
-
+        this.setState((prevState) => ({
+            disable: !prevState.disable,
+        }));
     }
 
     _updateTaskMessageOnKeyDown = () => {
-        // const { value: comment } = e.target;
-        //
-        // this.setState({ comment });
     };
 
     _getTaskShape = ({
@@ -59,6 +57,14 @@ export default class Task extends PureComponent {
         task,
     });
 
+    _updateTask = () => {
+        const {
+            _updateTaskAsync, id,
+        } = this.props;
+        _updateTaskAsync(id, this.message );
+    }
+
+
     render () {
         const {id , message , completed, favorite, created} = this.props;
         // console.log(this.props);
@@ -67,19 +73,20 @@ export default class Task extends PureComponent {
             <li className = { Styles.task } >
                 <div className = { Styles.content }>
                     <Checkbox
-                        checked = { this.state.checked }
+                        checked = { this.state.completed }
                         className = { Styles.toggleTaskCompletedState }
                         color1 = '#3B8EF3'
                         color2 = '#FFF'
-                        onClick = { this.Function }
+                        onClick = { this._toggleTaskCompleted }
                         width = { 25 }
                     />
 
                     <input
-                        disabled
+                        disabled = { this.state.disable }
                         maxLength = { 50 }
                         type = 'text'
-                        value = { message}
+                        value = { message }
+                        onChange = {  this._updateTask }
                     />
                 </div>
                 <div
@@ -93,13 +100,12 @@ export default class Task extends PureComponent {
                     />
 
                     <Edit
-                        checked = { this.edit }
                         className = { Styles.updateTaskMessageOnClick }
                         color1 = '#3B8EF3'
                         color2 = '#000'
                         height = { 19 }
                         inlineBlock
-                        // onClick={[Function]}
+                        onClick={ this._updateTaskMessageOnClick }
                         width = { 19 }
                     />
                     <Remove
@@ -108,6 +114,7 @@ export default class Task extends PureComponent {
                         color2 = '#000'
                         height = { 17 }
                         inlineBlock
+                        onClick = { this._removeTask }
                         width = { 17 }
                     />
                 </div>
