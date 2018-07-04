@@ -25,6 +25,7 @@ export default class Scheduler extends Component {
     }
 
     state = {
+        tasks: [],
         checked: true,
         message: '',
     }
@@ -102,9 +103,21 @@ export default class Scheduler extends Component {
 
 
     render () {
-        const { task: messages } = this.state;
+        const { task: userPostst, id, messages } = this.state;
 
         const { message, checked } = this.state;
+
+
+        const tasks = task.map((task) => (
+
+            <Task
+                _removeTaskAsync = { this._removeTaskAsync }
+                completed = { false }
+                favorite = { false }
+                id = '123'
+                key = '.$123'
+            />
+        ));
         return (
 
             <section className = { Styles.scheduler }>
@@ -135,13 +148,9 @@ export default class Scheduler extends Component {
                         <div className = 'overlay'>
                             <div>
                                 <ul>
-                                    <Task
-                                        _removeTaskAsync = { this._removeTaskAsync }
-                                        completed = { false }
-                                        favorite = { false }
-                                        id = '123'
-                                        key = '.$123'
-                                    />
+
+                                    {/*{task}*/}
+
                                 </ul>
                             </div>
                         </div>
