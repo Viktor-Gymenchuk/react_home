@@ -12,7 +12,7 @@ export default class Task extends PureComponent {
     state = {
         message: [],
         checked: false,
-        star:    false,
+        favorite:    false,
         edit:    false,
 
     }
@@ -23,6 +23,15 @@ export default class Task extends PureComponent {
         }));
 
     };
+
+
+    _removeTask = () => {
+        const {
+            _removeTaskAsync, id,
+        } = this.props;
+
+        _removeTaskAsync(id);
+    } //УДАЛИТЬ ПОСТЫ
 
     _toggleTaskFavoriteState = () => {
 
@@ -50,15 +59,9 @@ export default class Task extends PureComponent {
         task,
     });
 
-    _removePost = () => {
-        const {
-            _removeTascAsync, id,
-        } = this.props;
-
-        _removeTascAsync(id);
-    } //УДАЛИТЬ ПОСТЫ
-
     render () {
+        const {id , message , completed, favorite, created} = this.props;
+        // console.log(this.props);
 
         return (
             <li className = { Styles.task } >
@@ -75,16 +78,14 @@ export default class Task extends PureComponent {
                     <input
                         disabled
                         maxLength = { 50 }
-                        // onChange={ [Function] }
-                        // onKeyDown={ [Function] }
                         type = 'text'
-                        value = { this.message}
+                        value = { message}
                     />
                 </div>
                 <div
                     className = { Styles.actions }>
                     <Star
-                        checked = { this.star }
+                        checked = { favorite }
                         className = { Styles.toggleTaskFavoriteState }
                         color1 = '#3B8EF3'
                         color2 = '#000'
