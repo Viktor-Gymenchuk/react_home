@@ -31,7 +31,7 @@ export default class Scheduler extends Component {
             return task.message.search(
                 serchMesege) !== -1;
             });
-        // console.log(task);
+        console.log(newtasks);
         this.setState(({tasks}) => ({
             tasks: [newtasks, ...tasks] //перерендерить tasks
         }));
