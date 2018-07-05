@@ -18,6 +18,23 @@ export default class Scheduler extends Component {
         tasks: [],
         checked: true,
         message: '',
+        serchMesege: '',
+    }
+
+    _serchTast = (e) => {
+        const {value: serchMesege} = e.target;
+        this.setState({serchMesege})
+
+        const {tasks} = this.state;
+
+        var newtasks = tasks.filter(function (task) {
+            return task.message.search(
+                serchMesege) !== -1;
+            });
+        // console.log(task);
+        this.setState(({tasks}) => ({
+            tasks: [newtasks, ...tasks] //перерендерить tasks
+        }));
     }
 
     componentDidMount() {
@@ -87,7 +104,7 @@ export default class Scheduler extends Component {
         try {
             this._setTasksFetcingState(true);
             const task = await api.createTask(message);
-            this.setState(({ tasks }) => ({
+            this.setState(({tasks}) => ({
                 tasks: [task, ...tasks] //перерендерить tasks
             }));
         } catch ({message}) {
@@ -101,26 +118,26 @@ export default class Scheduler extends Component {
             this._setTasksFetcingState(true);
             await api.removeTask(id);
 
-            this.setState(({ tasks }) => ({
+            this.setState(({tasks}) => ({
                 tasks: tasks.filter((task) => task.id !== id),
             }));
-        } catch ({ message }) {
+        } catch ({message}) {
             console.error(message);
         } finally {
             this._setTasksFetcingState(false);
         }
     }
 
-    _updateTaskAsync = async (id, message) => {
+    _updateTaskAsync = async (id) => {
         try {
             this._setTasksFetcingState(true);
-            const updateTask = await api.updateTask(id, message);
+            const updateTask = await api.updateTask(id);
 
 
-            this.setState(({ tasks }) => ({
+            this.setState(({tasks}) => ({
                 tasks: tasks.map((task) => task.id === id ? updateTask : task), //очень важно с ключами
             }));
-        } catch ({ message }) {
+        } catch ({message}) {
             console.error(message);
         } finally {
             this._setTasksFetcingState(false);
@@ -136,8 +153,8 @@ export default class Scheduler extends Component {
                 completed={ false }
                 favorite={ false }
                 key={task.id}
-                _removeTaskAsync = { this._removeTaskAsync }
-                _updateTaskAsync = { this._updateTaskAsync}
+                _removeTaskAsync={ this._removeTaskAsync }
+                _updateTaskAsync={ this._updateTaskAsync}
             />
         ));
 
@@ -153,7 +170,12 @@ export default class Scheduler extends Component {
                     </Spinner>
                     <header>
                         <h1 className='test'>Планировщик задач</h1>
-                        <input type='search'/>
+                        <input
+                            onChange={ this._serchTast }
+                            placeholder="Поиск"
+                            type="search"
+                            value={ this.serchMesege}
+                        />
                     </header>
                     <section>
                         <form >

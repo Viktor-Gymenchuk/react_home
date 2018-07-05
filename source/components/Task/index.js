@@ -58,10 +58,12 @@ export default class Task extends PureComponent {
     });
 
     _updateTask = () => {
-        const {
-            _updateTaskAsync, id,
-        } = this.props;
-        _updateTaskAsync(id, this.message );
+        // const { message } = this.props;
+
+        // const {
+        //     _updateTaskAsync, id,
+        // } = this.props;
+        // _updateTaskAsync(id, this.message );
     }
 
 

@@ -52,7 +52,7 @@ export const api = {
         }
 
     },
-    async updateTask(id, message){
+    async updateTask(id){
         const response = await fetch(`${MAIN_URL}/${id}`, {
 
             method:  'PUT',
@@ -60,10 +60,11 @@ export const api = {
                 Authorization:  TOKEN,
             },
         });
-        console.log(message);
+
         if (response.status !== 204) {
             throw new Error('Posts were not update');
         }
-
+        const { data: task } = await response.json();
+        return task;
     },
 };
